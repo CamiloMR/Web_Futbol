@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const Liga = mongoose.model('Liga')
-const utils = require('./utils')
 
 exports.getLiga = function (req, res){
     Liga.find({}).exec(function (err, liga){

@@ -4,6 +4,6 @@ const ligaRutas = require('./ligaRutas')
 
 const router = express.Router()
 
-router.use('/api', ligaRutas)
+router.use('/api/', ligaRutas)
 
 module.exports = router
