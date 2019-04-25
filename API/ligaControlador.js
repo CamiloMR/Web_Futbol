@@ -1,10 +1,17 @@
 const mongoose = require('mongoose')
 const Liga = mongoose.model('Liga')
+const utils = require('./utils')
 
 exports.getLiga = function (req, res){
-    Liga.find(function (err, liga){
-        if (err) throw err 
-        console.log(liga)
+    Liga.find({}).exec(function (err, liga){
+        if(err){
+            res.status(500).send({
+                message: 'Ha ocurrido un error en el servidor',
+                description: err
+            })
+        }else{
+            res.send(liga)
+        }
     })
 }
 
@@ -12,8 +19,7 @@ exports.createLiga = function (req, res) {
     console.log(req.body);
     const liga = new Liga(req.body)
     liga.save(function (err, liga) {
-        if (err) throw err 
-        console.log(liga)
+        utils.show(res, err, liga)
     })
 }
 
@@ -33,4 +39,3 @@ exports.deleteLiga = function (req, res) {
         console.log(err)
     })
 }
-

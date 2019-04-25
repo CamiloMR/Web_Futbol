@@ -5,7 +5,10 @@ const Equipo = new Schema(
     {
       _id: Number,
       nombre: String,
-      liga_id: Number
+      liga_id: {
+        type: Number,
+        ref: 'Liga'
+      }
     },
     {
       collection: 'equipo',
@@ -13,4 +16,4 @@ const Equipo = new Schema(
     }
   )
   
-  module.exports = mongoose.model('equipo', Equipo)
+  module.exports = mongoose.model('Equipo', Equipo)

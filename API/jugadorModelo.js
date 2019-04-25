@@ -5,7 +5,10 @@ const Jugador = new Schema(
     {
       _id: Number,
       nombre: String,
-      equipo_id: Number
+      equipo_id: {
+        type: Number,
+        ref: 'Equipo'
+      }
     },
     {
       collection: 'jugador',
@@ -13,4 +16,4 @@ const Jugador = new Schema(
     }
   )
   
-  module.exports = mongoose.model('jugador', Jugador)
+  module.exports = mongoose.model('Jugador', Jugador)
