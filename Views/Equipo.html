@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Equipos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+        <div id="appEquipos" class="container">
+                <!-- Formulario para añadir Equipos -->
+                <section class="form">
+                    <form action="" class="text-center">
+                        <input v-model="nombre" @keyup.enter="crearEquipo" type="text" class="form-control" placeholder="nombre Equipo">
+                        <input v-model="pEquipo" @keyup.enter="crearEquipo" type="text" name="pEquipo" placeholder="pais" class="form-control" >
+                        <input v-model="tecnico" @keyup.enter="crearEquipo" type="text" name="tecnico" placeholder="tecnico" class="form-control">
+                        <!-- Botón para añadir -->
+                        <input @click="crearEquipo" type="button" value="Añadir" class="btn btn-success">
+                    </form>
+                </section>
+                <!-- Tabla donde se muestran los datos -->
+                <section class="data">
+                    <caption>Equipos</caption>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">id</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Pais</th>
+                                <th scope="col">Tecnico</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(Equipo, index) in Equipos">
+                                <td>{{ Equipo.id }}</td>
+                                <td>
+                                    <span v-if="formActualizar && idActualizar == index">
+                                        <!-- Formulario para actualizar -->
+                                        <input v-model="nombreActualizar" type="text" class="form-control">
+                                    </span>
+                                    <span v-else>
+                                        <!-- Dato nombre -->
+                                        {{ Equipo.nombre }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span v-if="formActualizar && idActualizar == index">
+                                        <!-- Formulario para actualizar -->
+                                        <input v-model="pEquipoActualizar" type="text" class="form-control">
+                                    </span>
+                                    <span v-else>
+                                        <!-- Dato pEquipo -->
+                                        {{ Equipo.pEquipo }}
+                                    </span>
+                                </td>
+                                <td>
+                                        <span v-if="formActualizar && idActualizar == index">
+                                            <!-- Formulario para actualizar -->
+                                            <input v-model="tecnicoActualizar" type="text" class="form-control">
+                                        </span>
+                                        <span v-else>
+                                            <!-- Dato pEquipo -->
+                                            {{ Equipo.tecnico }}
+                                        </span>
+                                </td>
+                                <td>
+                                    <!-- Botón para guardar la información actualizada -->
+                                    <span v-if="formActualizar && idActualizar == index">
+                                        <button @click="guardarActualizacion(index)" class="btn btn-success">Guardar</button>
+                                    </span>
+                                    <span v-else>
+                                        <!-- Botón para mostrar el formulario de actualizar -->
+                                        <button @click="verFormActualizar(index)" class="btn btn-warning">Actualizar</button>
+                                        <!-- Botón para borrar -->
+                                        <button @click="borrarEquipo(index)" class="btn btn-danger">Borrar</button>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    new Vue({
+                        el: '#appEquipos',
+                        data: {
+                            // Input nombre
+                            nombre: '',
+                            // Input pEquipo
+                            pEquipo: '',
+
+                            tecnico:'',
+                            // Ver o no ver el formulario de actualizar
+                            formActualizar: false,
+                            // La posición de tu lista donde te gustaría actualizar 
+                            idActualizar: -1,
+                            // Input nombre dentro del formulario de actualizar
+                            nombreActualizar: '',
+                            // Input pEquipo dentro del formulario de actualizar
+                            pEquipoActualizar: '',
+
+                            tecnicoActualizar:'',
+                            // Lista de Equipos
+                            Equipos: [] 
+                        },
+                        methods: {
+                            crearEquipo: function () {
+                                // Anyadimos a nuestra lista
+                                this.Equipos.push({
+                                    id: + new Date(),
+                                    nombre: this.nombre,
+                                    pEquipo: this.pEquipo,
+                                    tecnico:this.tecnico
+                                });
+                                // Vaciamos el formulario de añadir
+                                console.log(this.Equipos,this.Jugadores)
+                                localStorage.setItem('Equipos',JSON.stringify(this.Equipos))                         
+                                this.nombre = '';
+                                this.pEquipo = '';
+                                this.tecnico = '';
+                            },
+                            verFormActualizar: function (Equipo_id) {
+                                // Antes de mostrar el formulario de actualizar, rellenamos sus campos
+                                this.idActualizar = Equipo_id;
+                                this.nombreActualizar = this.Equipos[Equipo_id].nombre;
+                                this.pEquipoActualizar = this.Equipos[Equipo_id].pEquipo;
+                                this.tecnicoActualizar = this.Equipos[Equipo_id].tecnico;
+                                // Mostramos el formulario
+                                this.formActualizar = true;
+                            },
+                            borrarEquipo: function (Equipo_id) {
+                                // Borramos de la lista
+                                this.Equipos.splice(Equipo_id, 1);
+                            },
+                            guardarActualizacion: function (Equipo_id) {
+                                // Ocultamos nuestro formulario de actualizar
+                                this.formActualizar = false;
+                                // Actualizamos los datos
+                                this.Equipos[Equipo_id].nombre = this.nombreActualizar;
+                                this.Equipos[Equipo_id].pEquipo = this.pEquipoActualizar;
+                                this.Equipos[Equipo_id].tecnico = this.tecnicoActualizar;
+                            }
+        
+                          
+                        }
+                    });
+                });
+            </script>             
+                
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ligas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+        <div id="appLigas" class="container">
+                <!-- Formulario para añadir Ligas -->
+                <section class="form">
+                    <form action="" class="text-center">
+                        <input v-model="nombre" @keyup.enter="crearLiga" type="text" class="form-control" placeholder="nombre liga">
+                        <input v-model="pLiga" @keyup.enter="crearLiga" type="text" name="pLiga" placeholder="pais" class="form-control">
+                        <!-- Botón para añadir -->
+                        <input @click="crearLiga" type="button" value="Añadir" class="btn btn-success">
+                    </form>
+                </section>
+                <!-- Tabla donde se muestran los datos -->
+                <section class="data">
+                    <caption>Ligas</caption>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">id</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Liga</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(Liga, index) in Ligas">
+                                <td>{{ Liga.id }}</td>
+                                <td>
+                                    <span v-if="formActualizar && idActualizar == index">
+                                        <!-- Formulario para actualizar -->
+                                        <input v-model="nombreActualizar" type="text" class="form-control">
+                                    </span>
+                                    <span v-else>
+                                        <!-- Dato nombre -->
+                                        {{ Liga.nombre }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span v-if="formActualizar && idActualizar == index">
+                                        <!-- Formulario para actualizar -->
+                                        <input v-model="pLigaActualizar" type="text" class="form-control">
+                                    </span>
+                                    <span v-else>
+                                        <!-- Dato pLiga -->
+                                        {{ Liga.pLiga }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <!-- Botón para guardar la información actualizada -->
+                                    <span v-if="formActualizar && idActualizar == index">
+                                        <button @click="guardarActualizacion(index)" class="btn btn-success">Guardar</button>
+                                    </span>
+                                    <span v-else>
+                                        <!-- Botón para mostrar el formulario de actualizar -->
+                                        <button @click="verFormActualizar(index)" class="btn btn-warning">Actualizar</button>
+                                        <!-- Botón para borrar -->
+                                        <button @click="borrarLiga(index)" class="btn btn-danger">Borrar</button>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    new Vue({
+                        el: '#appLigas',
+                        data: {
+                            // Input nombre
+                            nombre: '',
+                            // Input pLiga
+                            pLiga: '',
+                            // Ver o no ver el formulario de actualizar
+                            formActualizar: false,
+                            // La posición de tu lista donde te gustaría actualizar 
+                            idActualizar: -1,
+                            // Input nombre dentro del formulario de actualizar
+                            nombreActualizar: '',
+                            // Input pLiga dentro del formulario de actualizar
+                            pLigaActualizar: '',
+                            // Lista de Ligas
+                            Ligas: [] 
+                        },
+                        methods: {
+                            crearLiga: function () {
+                                // Anyadimos a nuestra lista
+                                this.Ligas.push({
+                                    id: + new Date(),
+                                    nombre: this.nombre,
+                                    pLiga: this.pLiga
+                                });
+                                // Vaciamos el formulario de añadir
+                                this.nombre = '';
+                                this.pLiga = '';
+                            },
+                            verFormActualizar: function (Liga_id) {
+                                // Antes de mostrar el formulario de actualizar, rellenamos sus campos
+                                this.idActualizar = Liga_id;
+                                this.nombreActualizar = this.Ligas[Liga_id].nombre;
+                                this.pLigaActualizar = this.Ligas[Liga_id].pLiga;
+                                // Mostramos el formulario
+                                this.formActualizar = true;
+                            },
+                            borrarLiga: function (Liga_id) {
+                                // Borramos de la lista
+                                this.Ligas.splice(Liga_id, 1);
+                            },
+                            guardarActualizacion: function (Liga_id) {
+                                // Ocultamos nuestro formulario de actualizar
+                                this.formActualizar = false;
+                                // Actualizamos los datos
+                                this.Ligas[Liga_id].nombre = this.nombreActualizar;
+                                this.Ligas[Liga_id].pLiga = this.pLigaActualizar;
+                            }
+        
+                          
+                        }
+                    });
+                });
+            </script>
+</body>
+</html>
